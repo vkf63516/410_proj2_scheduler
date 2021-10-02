@@ -7,5 +7,29 @@
  *      implements shortest remaining time first scheduling algorithm
  *     pre-emptive
  */
+#include <algorithm>
+#include <vector>
+#include "../includes/scheduler_SRTF.h"
 
-//TODO fill in content
+bool Scheduler_SRTF::time_to_switch_processes(int tick_count, PCB &p) {
+	sort();
+	return Scheduler::time_to_switch_processes(tick_count, p);
+}
+
+bool sort_remains(PCB &m1, PCB &m2) {
+	return m1.remaining_cpu_time < m2.remaining_cpu_time;
+}
+
+void Scheduler_SRTF::sort() {
+	std::vector<PCB> temp;
+
+	while (!ready_q -> empty()) {
+		temp.push_back(ready_q -> front());
+		ready_q -> pop();
+	}
+	std::sort(temp.begin(), temp.end(), sort_remains);
+	for (int i = 0; i < temp.size(); ++i) {
+		ready_q -> push(temp.at(i));
+	}
+
+}

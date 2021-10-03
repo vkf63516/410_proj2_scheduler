@@ -13,7 +13,20 @@
 
 bool Scheduler_SRTF::time_to_switch_processes(int tick_count, PCB &p) {
 	sort();
-	return Scheduler::time_to_switch_processes(tick_count, p);
+	PCB check = ready_q->front();
+
+	if (check.remaining_cpu_time > 0)
+	{
+		if (check.process_number != p.process_number)
+		{
+			if (check.remaining_cpu_time < p.remaining_cpu_time)
+			{
+				return true;
+			}
+		}
+	}
+
+	return p.remaining_cpu_time <= 0;
 }
 
 bool sort_remains(PCB &m1, PCB &m2) {
